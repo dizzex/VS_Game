@@ -1,0 +1,8 @@
+#org.jbehave.core.embedder.StoryManager
+#Tue Dec 08 13:32:03 EET 2015
+com/epam/Volodymyr_Tovazhnianskyi/java/jbehave/story/S3_send_new_message.story=2000
+com/epam/Volodymyr_Tovazhnianskyi/java/jbehave/story/S1_login_in_mail_ru_scenario.story=9000
+com/epam/Volodymyr_Tovazhnianskyi/java/jbehave/story/S2_find_new_messages_in_mail_ru_scenario.story=7000
+threads=1
+total=18000
+threadAverage=18000

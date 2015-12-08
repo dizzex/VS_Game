@@ -1,0 +1,8 @@
+
+(com/epam/Volodymyr_Tovazhnianskyi/java/jbehave/story/S1_login_in_mail_ru_scenario.story)
+Scenario: Check login in process
+Given user login is tmail007 and password is SuperPassword
+When user tries to login into account
+Then there should be menu options
+
+

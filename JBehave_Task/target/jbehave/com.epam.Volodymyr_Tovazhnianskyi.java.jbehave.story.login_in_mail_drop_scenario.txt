@@ -1,0 +1,8 @@
+
+(com/epam/Volodymyr_Tovazhnianskyi/java/jbehave/story/login_in_mail_drop_scenario.story)
+Scenario: 
+Given MailDrop site http://maildrop.cc/
+When try to login as fkuquizfulll
+Then there should be menu options
+
+
