@@ -38,22 +38,25 @@ public abstract class Page {
 		element.sendKeys(text);
 	}
 	
-	public void hoverOverElement(By by, By by2){
+	public void hoverOverElement(By by){
 		Actions action = new Actions(contextDriver.driver);
 		action.moveToElement(findElement(by)).perform();
-		action.moveToElement(findElement(by2));
 		action.click();
 		action.build();
-		//
 	}
 	
 	public void waitForElementPresent(By by, TimeConstants waitingTime) throws TimeoutException{
-			new WebDriverWait(contextDriver.driver, waitingTime.getMilliseconds()/1000)
-			.until(ExpectedConditions.presenceOfElementLocated(by));
+			WebDriverWait wait = new WebDriverWait(contextDriver.driver, waitingTime.getMilliseconds()/1000);	
+			wait.until(ExpectedConditions.elementToBeClickable(by));
+			
 	}
 	
 	public void clickOnElement(WebElement element){
 		element.click();
+	}
+	
+	public void clickOnElement(By by){
+		contextDriver.driver.findElement(by).click();
 	}
 	
 	public void timeoutDriver(TimeConstants time){
@@ -62,6 +65,15 @@ public abstract class Page {
 	
 	public WebDriver getDriver(){
 		return contextDriver.driver;
+	}
+	
+	public void fakeWait(){
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }

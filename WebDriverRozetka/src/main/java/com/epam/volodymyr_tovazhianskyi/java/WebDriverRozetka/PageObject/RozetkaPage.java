@@ -13,64 +13,82 @@ import com.epam.volodymyr_tovazhianskyi.java.WebDriverRozetka.Enumerator.PathDat
 import com.epam.volodymyr_tovazhianskyi.java.WebDriverRozetka.Enumerator.TimeConstants;
 
 public abstract class RozetkaPage extends Page {
-	
+
 	protected final static By CART_BUTTON = By.xpath(".//*[contains(@id,'cart_block')]/a");
 	protected final static By ITEM_IN_CART = By.xpath(".//*[@id='cart-popup']/div/div[1]/div[2]/div/div[2]");
-	protected final static By DELETE_ITEM_IN_CART = By.xpath(".//*[@id='cart-popup']/div/div[1]/div[2]/div/div[1]/a/img");
-	protected final static By CONFIRM_DELETING_ITEM = By.xpath(".//*[@id='cart-popup']/div/div[1]/div[2]/div/div[1]/div/div/div[2]/a");
+	protected final static By CONFIRM_DELETING_ITEM = By
+			.xpath(".//*[@id='cart-popup']/div/div[1]/div[2]/div/div[1]/div/div/div[2]/a");
 	protected final static By CLOSE_CART_WINDOW = By.xpath(".//*[@id='cart-popup']/a/img");
-	
+
 	protected final static By MainPageLoginIntoAccountFirstButton_second = By.xpath(".//*[@id='header_user_menu']/a");
 	protected final static By MainPageLoginIntoAccountFirstButton = By.xpath(".//*[@id='header_user_menu_parent']/a");
-	protected final static By LoginFormLoginField = By.xpath(".//*[contains(@id,'user-popup-parent')]/div/div/div/form/div[1]/div[2]/input");
-	protected final static By LoginFormPasswordField = By.xpath(".//*[contains(@id,'user-popup-parent')]/div/div/div/form/div[1]/div[3]/div[1]/div[1]/input");
-	protected final static By LoginFormSubmitButton = By.xpath(".//*[contains(@id,'user-popup-parent')]/div/div/div/form/div[1]/div[3]/div[1]/div[2]/div/span/button");
+	protected final static By LoginFormLoginField = By
+			.xpath(".//*[contains(@id,'user-popup-parent')]/div/div/div/form/div[1]/div[2]/input");
+	protected final static By LoginFormPasswordField = By
+			.xpath(".//*[contains(@id,'user-popup-parent')]/div/div/div/form/div[1]/div[3]/div[1]/div[1]/input");
+	protected final static By LoginFormSubmitButton = By.xpath(
+			".//*[contains(@id,'user-popup-parent')]/div/div/div/form/div[1]/div[3]/div[1]/div[2]/div/span/button");
 	protected final static By SearchTextField = By.xpath(".//*[@id='search']/form/div[1]/div[2]/input");
 	protected final static By SearchButton = By.xpath(".//*[@id='search']/form/span/span");
-	
+
 	protected final static By LOGOUTBUTTON_fake = By.xpath(".//*[@id='header_user_menu']/li[10]/a");
 	protected final static By LOGOUTBUTTON = By.xpath(".//*[@id='personal_information']/div/ul/li[3]/a");
+
+	protected final static By CLOSE_POPUP = By.xpath("//a[contains(@class,'social-bind-tiny-close')]");
+	
+	protected final static String DELETE_ITEM_IN_CART_BASE = "//div[contains(@class,'active')][.//a[contains(text(),'%s')]]//div[contains(@class,'cart-check-wrap')]";
+	protected final static String DELETE_ITEM_IN_CART_ICON = "//img";
+	protected final static String DELETE_ITEM_IN_CART_CONFIRM = "//div[contains(@class,'cart-i-delete')]";
+	
+	
 
 	public RozetkaPage(ContextDriver driver) {
 		super(driver);
 	}
-	
-	public void deleteElementsFromCart(){
-		clickOnElement(findElement(CART_BUTTON));
-		try{
+
+	public void deleteElementFromCart(String itemName) {
+		clickOnElement(findElement(By.xpath(String.format(DELETE_ITEM_IN_CART_BASE.concat(DELETE_ITEM_IN_CART_ICON),itemName))));
+		try {
 			waitForElementPresent(ITEM_IN_CART, TimeConstants.TEN_SECONDS);
-			clickOnElement(findElement(DELETE_ITEM_IN_CART));
-			//clickOnElement(findElement(CONFIRM_DELETING_ITEM));
-		}catch(TimeoutException e){
+			// clickOnElement(findElement(DELETE_ITEM_IN_CART));
+			clickOnElement(findElement(By.xpath(String.format(DELETE_ITEM_IN_CART_BASE.concat(DELETE_ITEM_IN_CART_CONFIRM),itemName))));
+		} catch (TimeoutException e) {
 			JOptionPane.showMessageDialog(null, "No items in the cart");
 		}
 		clickOnElement(findElement(CLOSE_CART_WINDOW));
 	}
-	
-	public void hoverTest(){
-		hoverOverElement(MainPageLoginIntoAccountFirstButton, LOGOUTBUTTON_fake);
+
+	public void hoverTest() {
+		hoverOverElement(MainPageLoginIntoAccountFirstButton);
 	}
-	
-	public void logoutFromAccount(){
+
+	public void logoutFromAccount() {
 		try {
 			waitForElementPresent(MainPageLoginIntoAccountFirstButton, TimeConstants.TWO_SECONDS);
 		} catch (TimeoutException e) {
 			e.printStackTrace();
 		}
-		//hoverOverElement(MainPageLoginIntoAccountFirstButton);
-		clickOnElement(findElement(LOGOUTBUTTON_fake));
-		//clickOnElement(findElement(MainPageLoginIntoAccountFirstButton));
-		//clickOnElement(findElement(LOGOUTBUTTON));
+		clickOnElement(CLOSE_POPUP);
+		fakeWait();
+		hoverOverElement(MainPageLoginIntoAccountFirstButton);
+		try {
+			waitForElementPresent(LOGOUTBUTTON_fake, TimeConstants.TWO_SECONDS);
+			clickOnElement(findElement(LOGOUTBUTTON_fake));
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
+		// clickOnElement(findElement(MainPageLoginIntoAccountFirstButton));
+		// clickOnElement(findElement(LOGOUTBUTTON));
 	}
-	
-	public boolean checkIfLoggedIn(){
+
+	public boolean checkIfLoggedIn() {
 		if (findElement(MainPageLoginIntoAccountFirstButton).getText().contains("войдите в личный"))
 			return false;
 		else
 			return true;
 	}
-	
-	public void loginIntoAccount(String login, String password){
+
+	public void loginIntoAccount(String login, String password) {
 		contextDriver.driver.findElement(By.xpath(PathData.MainPageLoginIntoAccountFirstButtonXPath.getPath())).click();
 		try {
 			waitForElementPresent(LoginFormLoginField, TimeConstants.TEN_SECONDS);
@@ -82,34 +100,34 @@ public abstract class RozetkaPage extends Page {
 		clickSubmitLoginButton();
 	}
 
-	public void search(String searchText){
+	public void search(String searchText) {
 		fillSearchField(searchText);
-		clickSearchButton();		
+		clickSearchButton();
 	}
-	
-	private void fillInputLoginField(String login){
+
+	private void fillInputLoginField(String login) {
 		writeIntoWebElement(findElement(LoginFormLoginField), login);
-		//driver.findElement(By.xpath(PathData.LoginFormLoginFieldXPath.getPath())).sendKeys(login);
+		// driver.findElement(By.xpath(PathData.LoginFormLoginFieldXPath.getPath())).sendKeys(login);
 	}
-	
-	private void fillInputPasswordField(String password){
+
+	private void fillInputPasswordField(String password) {
 		writeIntoWebElement(findElement(LoginFormPasswordField), password);
-		//driver.findElement(By.xpath(PathData.LoginFormPasswordFieldXPath.getPath())).sendKeys(password);
+		// driver.findElement(By.xpath(PathData.LoginFormPasswordFieldXPath.getPath())).sendKeys(password);
 	}
-	
-	private void clickSubmitLoginButton(){
+
+	private void clickSubmitLoginButton() {
 		clickOnElement(findElement(LoginFormSubmitButton));
-		//driver.findElement(By.xpath(PathData.LoginFormSubmitButtonXPath.getPath())).click();
+		// driver.findElement(By.xpath(PathData.LoginFormSubmitButtonXPath.getPath())).click();
 	}
-	
-	private void fillSearchField(String searchText){
+
+	private void fillSearchField(String searchText) {
 		writeIntoWebElement(findElement(SearchTextField), searchText);
-		//driver.findElement(By.xpath(PathData.SearchTextFieldXPath.getPath())).sendKeys(searchText);
+		// driver.findElement(By.xpath(PathData.SearchTextFieldXPath.getPath())).sendKeys(searchText);
 	}
-	
-	private void clickSearchButton(){
+
+	private void clickSearchButton() {
 		clickOnElement(findElement(SearchButton));
-		//driver.findElement(By.xpath(PathData.SearchButtonXPath.getPath())).click();
+		// driver.findElement(By.xpath(PathData.SearchButtonXPath.getPath())).click();
 	}
-	
+
 }

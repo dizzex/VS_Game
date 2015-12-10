@@ -9,21 +9,27 @@ import com.epam.volodymyr_tovazhianskyi.java.WebDriverRozetka.Enumerator.TimeCon
 
 public class SearchResultPage extends RozetkaPage{
 	
-	public final static By FirstItemAddToCartButton = By.xpath(".//*[@id='block_with_search']/div/div[1]/div[2]/div[4]/div/div/form/span/button");
-
+	private final static String FIRST_SEARCHED_ITEM = "//div[contains(@class,'g-i-list available')][1]";
+	private final static String ADD_TO_CART = "//button[contains(@class,'btn-link-i')]";
+	private final static String ITEM_TITLE = "//div[contains(@class,'g-i-list-title')]/a";
+	
+	
 	public SearchResultPage(ContextDriver driver) {
 		super(driver);
 	}
 
 	public void addFirstItemToCart(){
 		try{
-			waitForElementPresent(FirstItemAddToCartButton, TimeConstants.TEN_SECONDS);
+			waitForElementPresent(By.xpath(FIRST_SEARCHED_ITEM), TimeConstants.TEN_SECONDS);
 		}
 		catch(TimeoutException e){
 			System.out.println("No search result is visible");
 		}
-		clickOnElement(findElement(FirstItemAddToCartButton));
-		
+		clickOnElement(findElement(By.xpath(FIRST_SEARCHED_ITEM.concat(ADD_TO_CART))));
+	}
+	
+	public String getFirstItemName(){
+		return findElement(By.xpath(FIRST_SEARCHED_ITEM.concat(ITEM_TITLE))).getText();
 	}
 	
 }

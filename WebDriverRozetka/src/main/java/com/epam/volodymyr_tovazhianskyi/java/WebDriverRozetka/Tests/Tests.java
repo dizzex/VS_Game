@@ -25,6 +25,7 @@ public class Tests {
 		pageContainer.getMainPage().getPage("http://rozetka.com.ua/");
 		pageContainer.getMainPage().loginIntoAccount("rozetkatestmail@gmail.com", "SuperPassword");
 		pageContainer.getMainPage().timeoutDriver(TimeConstants.TWO_SECONDS);
+		
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
@@ -38,10 +39,11 @@ public class Tests {
 //	}
 	
 	@Test
-	public void TestLogin(){
+	public void TestSearch(){
 		pageContainer.getMainPage().search("Бита");
 		pageContainer.getSearchResultPage().addFirstItemToCart();
-		pageContainer.getSearchResultPage().deleteElementsFromCart();
+		String nameOfItem = pageContainer.getSearchResultPage().getFirstItemName();
+		//pageContainer.getSearchResultPage().deleteElementFromCart(nameOfItem);
 		//Assert.assertTrue(pageContainer.getMainPage().checkIfLoggedIn());
 	}
 	
@@ -50,14 +52,14 @@ public class Tests {
 //		pageContainer.getMainPage().search("Бита");
 //	}
 	
-//	@Test
-//	public void TestLogout(){
-//		pageContainer.getMainPage().loginIntoAccount("rozetkatestmail@gmail.com", "SuperPassword");
-//		driver.driver.manage().timeouts().implicitlyWait(TimeConstants.TWO_SECONDS.getMilliseconds(), TimeUnit.MILLISECONDS);
-//		if (pageContainer.getMainPage().checkIfLoggedIn())
-//			pageContainer.getMainPage().logoutFromAccount();
-//		else
-//			JOptionPane.showMessageDialog(null, "Not logged in");
-//	}
+	@Test
+	public void TestLogout(){
+		//pageContainer.getMainPage().loginIntoAccount("rozetkatestmail@gmail.com", "SuperPassword");
+		//driver.driver.manage().timeouts().implicitlyWait(TimeConstants.TWO_SECONDS.getMilliseconds(), TimeUnit.MILLISECONDS);
+		if (pageContainer.getMainPage().checkIfLoggedIn())
+			pageContainer.getMainPage().logoutFromAccount();
+		else
+			JOptionPane.showMessageDialog(null, "Not logged in");
+	}
 
 }
